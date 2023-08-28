@@ -15,7 +15,7 @@
   <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <a class="navbar-brand px-4" href="#">Navbar</a>
+        <a class="navbar-brand px-4" href="#"><img src="./assets/LOGO_OF_LOGO.svg" alt="" style="height: 30px" /></a>
         <button
           class="navbar-toggler"
           type="button"
@@ -30,55 +30,33 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+              <a class="nav-link active fs-4" aria-current="page" href="./index.html">Home</a>
             </li>
+
             <li class="nav-item">
-              <a class="nav-link" href="#">Features</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Pricing</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+              <a class="nav-link fs-4" href="./back-office.html">Back-office</a>
             </li>
           </ul>
         </div>
       </div>
     </nav>
     <div class="container">
-      <ul id="products" class="list-group d-flex flex-row flex-wrap justify-content-between"></ul>
+      <div class="text-center">
+        <h1 class="text-center fw-bold fs-1 mt-4 d-inline-block">AVALAIBLE ARTICLES</h1>
+        <div class="spinner-border text-warning ms-3" id="spinner" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+      <div id="cards" class="row"></div>
     </div>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
       crossorigin="anonymous"
     ></script>
+    <script src="script.js"></script>
 
-    <script>
-      window.onload = () => {
-        const ul = document.getElementById("products");
-        fetch("https://striveschool-api.herokuapp.com/api/product/", {
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NGU4NWVlYmMwMzRmZjAwMTQwM2Y1MjIiLCJpYXQiOjE2OTI5NTAyNTEsImV4cCI6MTY5NDE1OTg1MX0.E1Svd7YXBZeVnBT0433spXutrd7I1MqGs38wXvu-uaw",
-          },
-        })
-          .then((resp) => resp.json())
-          .then((productsArr) => {
-            console.log(productsArr);
-
-            productsArr.forEach((product) => {
-              ul.innerHTML += `<div class=" p-0 card " style= "max-width: 10rem">
-<img src="${product.imageUrl}" class="card-img-top size " alt="...">
-<div class="card-body m-0">
-  <h5 class="card-title">${product.name} - ${product.brand}</h5>
-  <p class="card-text">${product.price}€</p>
-  <a href="./details.html?=${product._id}" class="btn btn-primary">Details</a>
-</div>
-</div>`;
-            });
-          });
-      };
-    </script>
+    <script src="script-index.js"></script>
   </body>
 </html>

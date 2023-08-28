@@ -1,32 +1,8 @@
-const productId = new URLSearchParams(window.location.search).get("eventId");
+const productId = new URLSearchParams(window.location.search).get("productId");
 const URL = productId
   ? "https://striveschool-api.herokuapp.com/api/product/" + productId
   : "https://striveschool-api.herokuapp.com/api/product/";
 
-window.onload = () => {
-  const ul = document.getElementById("products");
-  fetch("https://striveschool-api.herokuapp.com/api/product/", {
-    headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NGU4NWVlYmMwMzRmZjAwMTQwM2Y1MjIiLCJpYXQiOjE2OTI5NTAyNTEsImV4cCI6MTY5NDE1OTg1MX0.E1Svd7YXBZeVnBT0433spXutrd7I1MqGs38wXvu-uaw",
-    },
-  })
-    .then((resp) => resp.json())
-    .then((productsArr) => {
-      console.log(productsArr);
-
-      productsArr.forEach((product) => {
-        ul.innerHTML += `<div class="card">
-<img src="${product.imageUrl}" class="card-img-top size" alt="...">
-<div class="card-body">
-<h5 class="card-title">${product.name} - ${product.brand}</h5>
-<p class="card-text">${product.price}€</p>
-<a href="./details.html" class="btn btn-primary">Details</a>
-</div>
-</div>`;
-      });
-    });
-};
 const nameProd = document.getElementById("name");
 console.log(nameProd);
 const descriptionProd = document.getElementById("description");
@@ -38,27 +14,37 @@ console.log(imageProd);
 const priceProd = document.getElementById("price");
 console.log(priceProd);
 
+const pageName = document.getElementById("pageName");
+const mainBtn = document.querySelector("#mainBtn");
+const deleteBtn = document.getElementById("deleteBtn");
+
 window.onload = async () => {
-  const pageName = document.getElementById("pageName");
-  const mainBtn = document.querySelector("button[type= 'submit']");
-  const deleteBtn = document.getElementById("deleteBtn");
   deleteBtn.onclick = handleDelete;
-  if (eventId) {
+  if (productId) {
     console.log(deleteBtn);
-    pageName.innerText = "-modify your product";
-    const resp = await fetch(URL);
+    pageName.innerText = "MODIFY YOUR PRODUCT";
+
+    const resp = await fetch(URL, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NGU4NWVlYmMwMzRmZjAwMTQwM2Y1MjIiLCJpYXQiOjE2OTI5NTAyNTEsImV4cCI6MTY5NDE1OTg1MX0.E1Svd7YXBZeVnBT0433spXutrd7I1MqGs38wXvu-uaw",
+      },
+    });
     if (resp.ok) {
-      const { name, description, brand, imageUrl, price } = await resp.json();
+      const response = await resp.json();
+      const { name, description, brand, imageUrl, price } = response;
       nameProd.value = name;
       descriptionProd.value = description;
       brandProd.value = brand;
       imageProd.value = imageUrl;
       priceProd.value = price;
+
       mainBtn.innerText = "Modify product";
       deleteBtn.classList.remove("d-none");
     }
   } else {
-    pageName.innerText = "Add your product";
+    pageName.innerText = "ADD PRODUCT";
   }
 };
 const handleSubmit = async (event) => {
@@ -71,7 +57,7 @@ const handleSubmit = async (event) => {
     price: priceProd.value,
   };
   try {
-    const resp = await fetch("https://striveschool-api.herokuapp.com/api/product/", {
+    const resp = await fetch(URL, {
       method: productId ? "PUT" : "POST",
       body: JSON.stringify(publish),
       headers: {
@@ -86,6 +72,7 @@ const handleSubmit = async (event) => {
 
       if (productId) {
         alert("The product: " + newProductObj._id + "is modified");
+        window.location.assign("./index.html");
       } else {
         alert("Product created, product id: " + newProductObj._id);
         nameProd.value = "";
@@ -114,6 +101,15 @@ const handleDelete = async () => {
     alert("You've eliminated " + deleteProd.name);
     window.location.assign("./index.html");
   } else {
-    alert("Canceled");
+    alert("Operation canceled");
+    window.location.assign("./index.html");
+  }
+};
+
+const handleReset = async () => {
+  const accept = confirm("Are you sure to reset?");
+  if (!accept) {
+    alert("Operation canceled");
+    return;
   }
 };
